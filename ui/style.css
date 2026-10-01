@@ -1,0 +1,189 @@
+:root {
+  color-scheme: light dark;
+}
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+html,
+body {
+  height: 100%;
+}
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Helvetica Neue", sans-serif;
+  background: #f2f2f7;
+  color: #1d1d1f;
+  user-select: none;
+  -webkit-user-select: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.card {
+  position: relative;
+  width: calc(100% - 32px);
+  background: #ffffff;
+  border-radius: 12px;
+  padding: 16px 18px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+  overflow: hidden;
+}
+.row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+.title {
+  font-size: 14px;
+  font-weight: 600;
+}
+.subtitle {
+  font-size: 12px;
+  color: #86868b;
+  margin-top: 3px;
+}
+.switch {
+  position: relative;
+  width: 42px;
+  height: 26px;
+  flex: none;
+  border: none;
+  border-radius: 13px;
+  background: #d1d1d6;
+  cursor: pointer;
+  transition: background 0.2s ease;
+  padding: 0;
+}
+.switch::after {
+  content: "";
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: #ffffff;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.25);
+  transition: transform 0.2s ease;
+}
+.switch:focus-visible {
+  outline: 2px solid #0a84ff;
+  outline-offset: 2px;
+}
+.switch.on {
+  background: #34c759;
+}
+.switch.on::after {
+  transform: translateX(16px);
+}
+.switch.busy {
+  opacity: 0.6;
+  pointer-events: none;
+}
+.status {
+  margin-top: 14px;
+  font-size: 12px;
+  color: #86868b;
+  border-top: 1px solid rgba(0, 0, 0, 0.06);
+  padding-top: 10px;
+}
+.status.error {
+  color: #ff3b30;
+}
+
+/* 应用内授权层：覆盖卡片，仅在首次需要提权时显示 */
+.auth-layer {
+  position: absolute;
+  inset: 0;
+  background: #ffffff;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 14px 18px;
+}
+.auth-layer.hidden {
+  display: none;
+}
+.auth-title {
+  font-size: 13px;
+  font-weight: 600;
+}
+.auth-row {
+  display: flex;
+  gap: 8px;
+}
+#auth-pass {
+  flex: 1;
+  min-width: 0;
+  height: 28px;
+  border: 1px solid rgba(0, 0, 0, 0.18);
+  border-radius: 6px;
+  padding: 0 8px;
+  font-size: 13px;
+  font-family: inherit;
+  background: #ffffff;
+  color: inherit;
+  outline: none;
+}
+#auth-pass:focus {
+  border-color: #0a84ff;
+  box-shadow: 0 0 0 3px rgba(10, 132, 255, 0.25);
+}
+.auth-btn {
+  height: 28px;
+  padding: 0 12px;
+  border: none;
+  border-radius: 6px;
+  background: #e9e9eb;
+  font-size: 12px;
+  font-family: inherit;
+  cursor: pointer;
+  color: inherit;
+  flex: none;
+}
+.auth-btn.primary {
+  background: #0a84ff;
+  color: #ffffff;
+}
+.auth-btn:disabled {
+  opacity: 0.5;
+  cursor: default;
+}
+.auth-error {
+  font-size: 11px;
+  color: #ff3b30;
+  min-height: 14px;
+  margin-top: 8px;
+}
+@media (prefers-color-scheme: dark) {
+  body {
+    background: #1e1e20;
+    color: #f5f5f7;
+  }
+  .card {
+    background: #2a2a2d;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
+  }
+  .subtitle,
+  .status {
+    color: #98989d;
+  }
+  .switch {
+    background: #48484a;
+  }
+  .status {
+    border-top-color: rgba(255, 255, 255, 0.08);
+  }
+  .auth-layer {
+    background: #2a2a2d;
+  }
+  #auth-pass {
+    background: #1e1e20;
+    border-color: rgba(255, 255, 255, 0.18);
+  }
+  .auth-btn {
+    background: #48484a;
+  }
+}
