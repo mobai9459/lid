@@ -28,33 +28,48 @@ ImageDraw.Draw(mask).rounded_rectangle(
 )
 img = ImageChops.composite(bg, img, mask)
 
-# 太阳:实心核心圆 + 8 条圆头放射光线(极简几何风,呼应"保持唤醒")
-# 光线用"圆角矩形旋转"绘制,避免 line+圆叠加产生的接缝
-cx, cy = S // 2, S // 2  # 内容区中心
-CR = R / 2  # 内容区半径
-r_core = int(CR * 0.28)  # 核心圆半径
-r1, r2 = int(CR * 0.43), int(CR * 0.65)  # 光线内/外端
-w = int(CR * 0.085)  # 光线粗细(圆头)
-
-sd = ImageDraw.Draw(img)
-# 核心圆
-sd.ellipse([cx - r_core, cy - r_core, cx + r_core, cy + r_core], fill=(255, 255, 255, 255))
-
-# 光线:竖直胶囊旋转 8 个角度
+# 夜空主题:左下弯月 + 右上小星(呼应"合盖/睡眠"场景)
 import math
 
-len_ray = r2 - r1
-cap = Image.new("RGBA", (w, len_ray), (0, 0, 0, 0))
-ImageDraw.Draw(cap).rounded_rectangle(
-    [0, 0, w - 1, len_ray - 1], radius=w // 2, fill=(255, 255, 255, 255)
-)
-mid_r = (r1 + r2) / 2
-for i in range(8):
-    ang = i * 45 - 90  # 数学角,-90 从正上方开始
-    mx = cx + math.cos(math.radians(ang)) * mid_r
-    my = cy + math.sin(math.radians(ang)) * mid_r
-    ray = cap.rotate(i * 45, expand=True, resample=Image.BICUBIC)
-    img.alpha_composite(ray, (int(mx - ray.width / 2), int(my - ray.height / 2)))
+cx, cy = S // 2, S // 2  # 内容区中心
+CR = R / 2  # 内容区半径
+C2 = 0.7071  # sin45 = cos45
+
+# --- 弯月:大圆减去朝右上 45° 偏移的"咬"圆,月角指向星星;月亮为画面主体 ---
+mR = int(CR * 0.60)  # 月亮半径
+mx = cx - int(R * 0.10)
+my = cy + int(R * 0.10)
+bR = int(mR * 0.82)  # 咬圆半径
+bd = int(mR * 0.55)  # 咬圆圆心偏移距离
+bx, by = mx + int(bd * C2), my - int(bd * C2)
+
+moon_mask = Image.new("L", (S, S), 0)
+md = ImageDraw.Draw(moon_mask)
+md.ellipse([mx - mR, my - mR, mx + mR, my + mR], fill=255)
+md.ellipse([bx - bR, by - bR, bx + bR, by + bR], fill=0)
+white = Image.new("RGBA", (S, S), (255, 255, 255, 255))
+img = Image.composite(white, img, moon_mask)
+
+# --- 星芒:四角星,内凹比 0.3;独立小图 4x 超采样后贴回,保证尖角平滑;仅作右上角点缀 ---
+sR = int(CR * 0.075)  # 星星外接半径
+sx = cx + int(R * 0.30)
+sy = cy - int(R * 0.30)
+inr = 0.30  # 内凹半径比例
+
+ss = 4
+tile = ss * (2 * sR + 8)  # 星星画布,外留余量
+stim = Image.new("RGBA", (tile, tile), (0, 0, 0, 0))
+pts = []
+for k in range(4):
+    ao = math.radians(k * 90 - 90)  # 外点:上、右、下、左
+    ai = math.radians(k * 90 - 45)  # 内点:斜向
+    pts.append((tile / 2 + sR * ss * math.cos(ao), tile / 2 + sR * ss * math.sin(ao)))
+    pts.append(
+        (tile / 2 + sR * inr * ss * math.cos(ai), tile / 2 + sR * inr * ss * math.sin(ai))
+    )
+ImageDraw.Draw(stim).polygon(pts, fill=(255, 255, 255, 255))
+stim = stim.resize((tile // ss, tile // ss), Image.LANCZOS)
+img.alpha_composite(stim, (sx - tile // ss // 2, sy - tile // ss // 2))
 
 img = img.resize((1024, 1024), Image.LANCZOS)
 img.save(out)
