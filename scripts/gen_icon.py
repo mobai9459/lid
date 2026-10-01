@@ -28,21 +28,33 @@ ImageDraw.Draw(mask).rounded_rectangle(
 )
 img = ImageChops.composite(bg, img, mask)
 
-# 新月:大圆减去偏移圆(开口朝右上),尺寸按内容区等比缩放
+# 太阳:实心核心圆 + 8 条圆头放射光线(极简几何风,呼应"保持唤醒")
+# 光线用"圆角矩形旋转"绘制,避免 line+圆叠加产生的接缝
 cx, cy = S // 2, S // 2  # 内容区中心
-mr = int(620 * 0.8)  # 月亮大圆半径
-ox, oy, orr = int(312 * 0.8), int(-216 * 0.8), int(516 * 0.8)  # 减圆偏移与半径
-moon = Image.new("L", (S, S), 0)
-m = ImageDraw.Draw(moon)
-m.ellipse([cx - mr, cy - mr, cx + mr, cy + mr], fill=255)
-m.ellipse([cx + ox - orr, cy + oy - orr, cx + ox + orr, cy + oy + orr], fill=0)
-moon = moon.filter(ImageFilter.GaussianBlur(2))
-img.paste(Image.new("RGBA", (S, S), (255, 255, 255, 255)), (0, 0), moon)
+CR = R / 2  # 内容区半径
+r_core = int(CR * 0.28)  # 核心圆半径
+r1, r2 = int(CR * 0.43), int(CR * 0.65)  # 光线内/外端
+w = int(CR * 0.085)  # 光线粗细(圆头)
 
-# 小星星(远离月亮主体,单颗)
 sd = ImageDraw.Draw(img)
-sx, sy, r, a = MARGIN + int((380 - MARGIN) * 0.8), MARGIN + int((1600 - MARGIN) * 0.8), 19, 195
-sd.ellipse([sx - r, sy - r, sx + r, sy + r], fill=(255, 255, 255, a))
+# 核心圆
+sd.ellipse([cx - r_core, cy - r_core, cx + r_core, cy + r_core], fill=(255, 255, 255, 255))
+
+# 光线:竖直胶囊旋转 8 个角度
+import math
+
+len_ray = r2 - r1
+cap = Image.new("RGBA", (w, len_ray), (0, 0, 0, 0))
+ImageDraw.Draw(cap).rounded_rectangle(
+    [0, 0, w - 1, len_ray - 1], radius=w // 2, fill=(255, 255, 255, 255)
+)
+mid_r = (r1 + r2) / 2
+for i in range(8):
+    ang = i * 45 - 90  # 数学角,-90 从正上方开始
+    mx = cx + math.cos(math.radians(ang)) * mid_r
+    my = cy + math.sin(math.radians(ang)) * mid_r
+    ray = cap.rotate(i * 45, expand=True, resample=Image.BICUBIC)
+    img.alpha_composite(ray, (int(mx - ray.width / 2), int(my - ray.height / 2)))
 
 img = img.resize((1024, 1024), Image.LANCZOS)
 img.save(out)
