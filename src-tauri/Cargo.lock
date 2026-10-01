@@ -1706,7 +1706,7 @@ dependencies = [
 ]
 
 [[package]]
-name = "lid-switch"
+name = "lid"
 version = "0.1.0"
 dependencies = [
  "serde",

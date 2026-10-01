@@ -1,8 +1,8 @@
 {
   "$schema": "https://schema.tauri.app/config/2",
-  "productName": "LidSwitch",
+  "productName": "Lid",
   "version": "0.1.0",
-  "identifier": "com.shamo.lidswitch",
+  "identifier": "com.shamo.lid",
   "build": {
     "frontendDist": "../ui"
   },
