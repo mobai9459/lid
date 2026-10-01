@@ -1,37 +1,50 @@
-# Lid 合盖睡眠助手
+# Lid
 
-Tauri v2 菜单栏小工具：开关切换 `pmset -a disablesleep 1/0`，控制 macOS 合盖是否休眠。首次切换需要输入开机密码授权（sudo），本次运行内免密。
+<p align="center">
+  <img src="app-icon.png" width="96" alt="Lid icon">
+</p>
 
-## 开发调试
+English | [简体中文](README.zh-CN.md)
+
+<p align="center">
+  <img src="docs/screenshot.png" width="420" alt="Lid app screenshot">
+</p>
+
+In the age of AI agents, Macs spend a lot of time working with nobody watching — builds, model training, crawlers, long-running agent tasks. Close the lid, and macOS puts everything to sleep.
+
+**Lid is a tiny macOS app that solves exactly one problem: keep your Mac running after you close the lid.**
+
+One switch, nothing else. It flips `pmset -a disablesleep 1/0` under the hood.
+
+## Features
+
+- **One switch** — lid-close sleep on / off, takes effect immediately
+- **Secure** — the first toggle asks for your admin password (sudo); it is cached in memory for this session only, never written to disk or logs
+- **Bilingual UI** — English / 简体中文, follows your system language automatically
+- **Light & dark mode** ready
+
+## How it works
+
+| Switch | Command |
+| ------ | ------- |
+| ON     | `sudo pmset -a disablesleep 1` |
+| OFF    | `sudo pmset -a disablesleep 0` |
+
+## Build & Install
+
+Requires Node.js and Rust.
 
 ```bash
-npm run dev
+npm install        # first time only
+npm run build      # build Lid.app
 ```
 
-启动开发模式，带热重载，改动前端或 Rust 代码后自动刷新。
-
-## 构建打包
-
-```bash
-npm run build
-```
-
-产出：
-
-- App：`src-tauri/target/release/bundle/macos/Lid.app`
-- DMG 打包被禁用（`tauri.conf.json` 中 `targets` 已设为 `["app"]`），需要 DMG 时手工打：
-
-```bash
-hdiutil create -volname Lid \
-  -srcfolder src-tauri/target/release/bundle/macos/Lid.app \
-  -ov -format UDZO \
-  src-tauri/target/release/bundle/dmg/Lid_0.1.0_aarch64.dmg
-```
-
-## 一键构建 + 安装
+The app is produced at `src-tauri/target/release/bundle/macos/Lid.app`. Or build and install to `/Applications` in one step:
 
 ```bash
 ./scripts/install.sh
 ```
 
-依次执行：release 构建 → 停掉运行中的实例 → 安装到 `/Applications/Lid.app` → 更新 DMG → 启动应用。
+## License
+
+MIT

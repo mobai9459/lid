@@ -1,28 +1,28 @@
 <!doctype html>
-<html lang="zh-CN">
+<html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>合盖睡眠助手</title>
+    <title>Lid</title>
     <link rel="stylesheet" href="style.css" />
   </head>
   <body>
     <main class="card">
       <div class="row">
         <div class="text">
-          <div class="title">合盖不休眠</div>
-          <div class="subtitle">开启后合盖仍保持运行</div>
+          <div class="title" id="t-title"></div>
+          <div class="subtitle" id="t-subtitle"></div>
         </div>
-        <button id="switch" class="switch" role="switch" aria-checked="false" aria-label="合盖不休眠"></button>
+        <button id="switch" class="switch" role="switch" aria-checked="false" aria-label="Lid"></button>
       </div>
-      <div id="status" class="status">正在读取当前设置…</div>
+      <div id="status" class="status"></div>
 
       <div id="auth-layer" class="auth-layer hidden">
-        <div class="auth-title">管理员授权</div>
+        <div class="auth-title" id="t-auth-title"></div>
         <div class="auth-row">
-          <input id="auth-pass" type="password" placeholder="开机密码" autocomplete="off" />
-          <button id="auth-ok" class="auth-btn primary">好</button>
-          <button id="auth-cancel" class="auth-btn">取消</button>
+          <input id="auth-pass" type="password" autocomplete="off" />
+          <button id="auth-ok" class="auth-btn primary"></button>
+          <button id="auth-cancel" class="auth-btn"></button>
         </div>
         <div id="auth-error" class="auth-error"></div>
       </div>
