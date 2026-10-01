@@ -7,14 +7,16 @@
 English | [简体中文](README.zh-CN.md)
 
 <p align="center">
-  <img src="docs/screenshot.png" width="420" alt="Lid app screenshot">
+  <img src="docs/ss.png" width="420" alt="Lid app screenshot">
 </p>
 
-In the age of AI agents, Macs spend a lot of time working with nobody watching — builds, model training, crawlers, long-running agent tasks. Close the lid, and macOS puts everything to sleep.
+Here's the whole story. I carry my MacBook around — sometimes in hand on a walk, sometimes tucked into a backpack on the way out — while it keeps working with nobody watching: builds, model training, crawlers, long-running agent jobs. At some point I have to close the lid, and the second I do, macOS puts everything to sleep. The work just dies quietly in the backpack.
 
-**Lid is a tiny macOS app that solves exactly one problem: keep your Mac running after you close the lid.**
+Could one line of `sudo pmset -a disablesleep 1` fix it? Yes. Do mature apps already do this? Also yes. But I just wanted this one tiny switch as a little app of my own — so I built it with WorkBuddy, and enjoyed the fun of creating things in the AI era. Want a small tool? Just make it.
 
-One switch, nothing else. It flips `pmset -a disablesleep 1/0` under the hood.
+**Lid does exactly one thing: keep your Mac running after you close the lid.**
+
+One switch, nothing else.
 
 ## Features
 
@@ -44,6 +46,8 @@ The app is produced at `src-tauri/target/release/bundle/macos/Lid.app`. Or build
 ```bash
 ./scripts/install.sh
 ```
+
+That's all it is. If you've ever closed the lid and wished your Mac would just keep working, this little app is for you.
 
 ## License
 
